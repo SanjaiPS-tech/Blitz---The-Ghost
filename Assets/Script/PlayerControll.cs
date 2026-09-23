@@ -32,11 +32,13 @@ public class PlayerControll : MonoBehaviour
             playerRigidbody.constraints |= RigidbodyConstraints.FreezeRotation;
         }
 
-        if (playerCamera == null)
+        Camera mainCamera = Camera.main;
+        if (playerCamera != null && mainCamera != null && playerCamera != mainCamera)
         {
-            playerCamera = Camera.main;
+            Debug.LogError("PlayerControll camera must be tagged MainCamera.", this);
         }
 
+        playerCamera = mainCamera;
         if (playerCamera == null)
         {
             Debug.LogError("PlayerControll requires a camera tagged MainCamera.", this);
@@ -49,7 +51,8 @@ public class PlayerControll : MonoBehaviour
                 pitch -= 360f;
             }
 
-            pitch = Mathf.Clamp(pitch, -pitchLimit, pitchLimit);
+            float effectivePitchLimit = Mathf.Clamp(pitchLimit, 0f, 90f);
+            pitch = Mathf.Clamp(pitch, -effectivePitchLimit, effectivePitchLimit);
         }
 
         if (groundMask.value == 0)
@@ -79,7 +82,8 @@ public class PlayerControll : MonoBehaviour
         }
 
         pitch -= Input.GetAxis("Mouse Y") * lookSensitivity;
-        pitch = Mathf.Clamp(pitch, -pitchLimit, pitchLimit);
+        float effectivePitchLimit = Mathf.Clamp(pitchLimit, 0f, 90f);
+        pitch = Mathf.Clamp(pitch, -effectivePitchLimit, effectivePitchLimit);
         playerCamera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
     }
 
@@ -92,6 +96,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         Vector3 direction = transform.TransformDirection(new Vector3(movementInput.x, 0f, movementInput.y));
+        direction.y = 0f;
         playerRigidbody.AddForce(direction * movementForce, ForceMode.Force);
 
         bool isGrounded = groundMask.value != 0 &&
