@@ -68,5 +68,11 @@
         "*.slnx": "*.csproj"
     },
     "dotnet.defaultSolution": "Blitz - The Ghost.slnx",
-    "dotnet.enableWorkspaceBasedDevelopment": false
+    "dotnet.enableWorkspaceBasedDevelopment": false,
+    "chat.tools.terminal.autoApprove": {
+        "/^git add -- 'Assets/Script/PlayerControll\\.cs' && git diff --cached --check && git diff --cached --stat && git diff --cached -- 'Assets/Script/PlayerControll\\.cs' && git status --short && git commit -m \"feat: add first person player controller\" -m \"Co-authored-by: Copilot <223556219\\+Copilot@users\\.noreply\\.github\\.com>\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
 }
